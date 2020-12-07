@@ -59,6 +59,15 @@ def add_expense(path, description, amount, expense_date):
         writer.writerow(row)
 
 
+def list_expenses(path):
+    rows = read_expenses(path)
+    if not rows:
+        print('No expenses yet. Use add to record your first expense.')
+        return
+    for row in rows:
+        print('{}  {:>10}  {}'.format(row['date'], row['amount'], row['description']))
+
+
 def main():
     parser = argparse.ArgumentParser(description='Keep a simple personal expense log.')
     parser.add_argument('--file', type=Path, default=Path('expenses.csv'))
@@ -67,10 +76,14 @@ def main():
     add.add_argument('description')
     add.add_argument('amount')
     add.add_argument('--date', default=date.today().isoformat())
+    commands.add_parser('list', help='Show recorded expenses')
     args = parser.parse_args()
     try:
-        add_expense(args.file, args.description, args.amount, args.date)
-        print('Expense saved.')
+        if args.command == 'add':
+            add_expense(args.file, args.description, args.amount, args.date)
+            print('Expense saved.')
+        else:
+            list_expenses(args.file)
     except (OSError, ValueError, csv.Error, UnicodeError) as error:
         parser.exit(1, 'Error: {}\n'.format(error))
 
