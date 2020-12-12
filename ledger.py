@@ -68,6 +68,16 @@ def list_expenses(path):
         print('{}  {:>10}  {}'.format(row['date'], row['amount'], row['description']))
 
 
+def summarize_expenses(path, month):
+    if month:
+        parse_date(month + '-01')
+    rows = read_expenses(path)
+    if month:
+        rows = [row for row in rows if row['date'].startswith(month + '-')]
+    total = sum((Decimal(row['amount']) for row in rows), Decimal('0.00'))
+    print('{} expenses | Total: {:.2f}'.format(len(rows), total))
+
+
 def main():
     parser = argparse.ArgumentParser(description='Keep a simple personal expense log.')
     parser.add_argument('--file', type=Path, default=Path('expenses.csv'))
@@ -77,13 +87,17 @@ def main():
     add.add_argument('amount')
     add.add_argument('--date', default=date.today().isoformat())
     commands.add_parser('list', help='Show recorded expenses')
+    summary = commands.add_parser('summary', help='Show an expense total')
+    summary.add_argument('--month', help='Filter by YYYY-MM')
     args = parser.parse_args()
     try:
         if args.command == 'add':
             add_expense(args.file, args.description, args.amount, args.date)
             print('Expense saved.')
-        else:
+        elif args.command == 'list':
             list_expenses(args.file)
+        else:
+            summarize_expenses(args.file, args.month)
     except (OSError, ValueError, csv.Error, UnicodeError) as error:
         parser.exit(1, 'Error: {}\n'.format(error))
 

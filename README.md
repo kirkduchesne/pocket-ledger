@@ -15,3 +15,5 @@ python3 ledger.py add "Coffee" 3.50 --date 2020-12-05
 The date defaults to today. Amounts must be positive, at most 999999.99, and have no more than two decimal places. Use a single currency per file. Data stays in `expenses.csv` in your current directory; that file is ignored by Git. Use `--file /path/to/log.csv` before the command to select another file in an existing directory. Invalid data produces an error instead of overwriting the file. Intended for one process at a time.
 
 Show recorded expenses with `python3 ledger.py list`. An empty file list shows a helpful message.
+
+Show all-time totals with `python3 ledger.py summary`, or filter a month with `python3 ledger.py summary --month 2020-12`. Decimal arithmetic keeps amounts exact.
