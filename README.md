@@ -17,3 +17,7 @@ The date defaults to today. Amounts must be positive, at most 999999.99, and hav
 Show recorded expenses with `python3 ledger.py list`. An empty file list shows a helpful message.
 
 Show all-time totals with `python3 ledger.py summary`, or filter a month with `python3 ledger.py summary --month 2020-12`. Decimal arithmetic keeps amounts exact.
+
+## Checks
+
+Run `python3 -m unittest -v`. The tests use temporary files and cover persistence, quoted descriptions, exact totals, invalid input, malformed files, and inaccessible paths. Verified on Python 3.9 and Python 3.13. The implementation uses only standard-library features available in Python 3.9; a currently supported Python version can also run it.
